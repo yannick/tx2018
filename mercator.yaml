@@ -1,0 +1,28 @@
+mercator.yamllisten:
+  port: 8080
+
+max-connections: 8192
+http2-graceful-shutdown-timeout: 3
+duration-stats: ON
+
+num-threads: 1
+hosts:
+  "*":
+    paths:
+      <<: !file kafka.yaml
+      /geo.json:
+        mruby.handler-file: geo.rb
+        file.file: empty.json
+        kafka-log:
+          <<: *default_kafka
+          topic:
+            <<: *default_kafka_msg_conf
+            name: USR.EVENT.mercator.mobile.geolookup
+
+    access-log:
+      path: /dev/null
+
+  "*:8081": 
+    <<: !file admin.yaml
+    access-log:
+      path: /dev/null

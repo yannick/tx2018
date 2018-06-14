@@ -1,0 +1,19 @@
+  listen:
+    port: 9399
+  paths:
+
+    /monitoring:
+      mruby.handler-file: handlers/prometheus.rb
+    /test:
+        mruby.handler: |
+          redis = H2O::Redis.new(:host => '127.0.0.1', :port => 6379, :db => 2)
+          Proc.new do |env|
+            input = env["rack.input"] ? env["rack.input"].read : '{"key": "BLAH"}'
+            parsed_json = JSON.parse(input)
+            set = redis.set('key', 'value')
+            key = parsed_json['key']
+            getk = redis.get(key)
+            puts("KEY IS #{key}")
+            # redis.disconnect
+            [ 200, {}, [getk.join] ]
+          end

@@ -1,0 +1,14 @@
+/RESERVED: 
+ kafka-log: &default_kafka
+  metadata.broker.list: !env KAFKA_BROKERS
+  group.id: h2o-mercator
+  api.version.request: true
+  log.connection.close: false
+  topic: &default_kafka_msg_conf
+    key: "%A"
+    name: USR.EVENT.h2o.default.unknown
+    message: '{"ts": %{sec}t,
+      "proto": {"prot":"%H","realIp": "%{X-Real-IP}i", "ip": "%h","method":"%m","qry":"%q","status":"%s","tsusec": %{usec}t,"date":"%{%Y-%m-%d}t","path":"%U","connectionId":%{connection-id}x,"sslVersion":"%{ssl.protocol-version}x","sslReused": "%{ssl.session-reused}x","sslCipher":"%{ssl.cipher}x","sslCipherBits":"%{ssl.cipher-bits}x", "http2StreamId": "%{http2.stream-id}x", "duration": %{duration}x, "processTime": %{process-time}x, "requestTotalTime": %{request-total-time}x, "connectTime": %{connect-time}x,"referer":"%{Referer}i",   "user-agent": "%{User-agent}i"},
+      "request": %{MRB_REQUEST}e,
+      "response": %{MRB_RESPONSE}e,
+      "requestHeaders": %{MRB_HEADERS}e }
